@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
 
   
   // ✅ Use "/EcoWaste/" only in production (for GitHub Pages), "/" for local dev
-  base: mode === "production" ? "/EcoWaste/" : "/",
+  base: mode === "production" ? "/Ecowaste/" : "/",
   
 
   plugins: [
