@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/layout/Navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,6 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
@@ -17,14 +16,12 @@ import {
   Shield,
   HelpCircle,
   LogOut,
-  Camera,
   Save,
   Smartphone,
   Mail,
   MapPin,
   Globe,
-  Eye,
-  Lock
+  Eye
 } from 'lucide-react';
 
 const Settings = () => {
@@ -32,13 +29,49 @@ const Settings = () => {
   const { toast } = useToast();
 
   const [profile, setProfile] = useState({
-    name: userType === 'collector' ? 'Pratik Warke' : 'Kalpesh Warke',
-    email: userType === 'collector' ? 'kalpeshwarke05@gmail.com' : 'kalpesh.warke@gov.in',
-    phone: '+91 9834171226',
+    name: '',
+    email: '',
+    phone: '',
     aadhaar: '****-****-9171',
-    address: 'Sudhakar Nagar, Jalgaon, Maharashtra, India',
-    bio: userType === 'collector' ? 'Passionate about environmental conservation' : 'Dedicated government employee managing waste collection'
+    address: '',
+    bio: ''
   });
+
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+
+  // Load saved profile & photo on mount
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('profile');
+    if (savedProfile) {
+      setProfile(JSON.parse(savedProfile));
+    } else {
+      // default values if no saved profile
+      setProfile({
+        name: userType === 'collector' ? 'Pratik Warke' : 'Kalpesh Warke',
+        email: userType === 'collector' ? 'kalpeshwarke05@gmail.com' : 'kalpesh.warke@gov.in',
+        phone: '+91 9834171226',
+        aadhaar: '****-****-9171',
+        address: 'Sudhakar Nagar, Jalgaon, Maharashtra, India',
+        bio: userType === 'collector'
+          ? 'Passionate about environmental conservation'
+          : 'Dedicated government employee managing waste collection'
+      });
+    }
+
+    const savedPhoto = localStorage.getItem('profilePhoto');
+    if (savedPhoto) setProfilePhoto(savedPhoto);
+  }, [userType]);
+
+  const handleSaveProfile = () => {
+    localStorage.setItem('profile', JSON.stringify(profile));
+    if (profilePhoto) {
+      localStorage.setItem('profilePhoto', profilePhoto);
+    }
+    toast({
+      title: "Profile Updated",
+      description: "Your profile information has been saved successfully.",
+    });
+  };
 
   const [notifications, setNotifications] = useState({
     emailNotifications: true,
@@ -62,13 +95,6 @@ const Settings = () => {
     currency: 'inr',
     timezone: 'asia/kolkata'
   });
-
-  const handleSaveProfile = () => {
-    toast({
-      title: "Profile Updated",
-      description: "Your profile information has been saved successfully.",
-    });
-  };
 
   const handleSaveNotifications = () => {
     toast({
@@ -135,6 +161,7 @@ const Settings = () => {
               <TabsTrigger value="support">Support</TabsTrigger>
             </TabsList>
 
+            {/* Profile Tab */}
             <TabsContent value="profile" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -148,21 +175,37 @@ const Settings = () => {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Profile Picture */}
-                  <div className="flex items-center gap-6">
-                    <Avatar className="h-24 w-24">
-                      <AvatarFallback className="text-2xl bg-eco-forest-primary/10 text-eco-forest-primary">
-                        {profile.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="space-y-2">
-                      <Button variant="outline" size="sm">
-                        <Camera className="mr-2 h-4 w-4" />
-                        Change Photo
-                      </Button>
-                      <p className="text-sm text-muted-foreground">
-                        Upload a profile picture to personalize your account
-                      </p>
-                    </div>
+                  <div className="flex flex-col items-start gap-2">
+                    <img
+                      src={profilePhoto || "/default-avatar.png"}
+                      alt="Profile"
+                      className="w-24 h-24 rounded-full object-cover border-2 border-eco-forest-primary"
+                    />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="profile-photo-input"
+                      style={{ display: "none" }}
+                      onChange={e => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = ev => {
+                            const result = ev.target?.result as string;
+                            setProfilePhoto(result);
+                            localStorage.setItem('profilePhoto', result); // Save immediately
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById("profile-photo-input")?.click()}
+                    >
+                      Change Photo
+                    </Button>
                   </div>
 
                   {/* Personal Information */}
@@ -234,6 +277,7 @@ const Settings = () => {
               </Card>
             </TabsContent>
 
+            {/* Notifications Tab */}
             <TabsContent value="notifications" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -354,6 +398,7 @@ const Settings = () => {
               </Card>
             </TabsContent>
 
+            {/* Privacy Tab */}
             <TabsContent value="privacy" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -457,6 +502,7 @@ const Settings = () => {
               </Card>
             </TabsContent>
 
+            {/* Preferences Tab */}
             <TabsContent value="preferences" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -549,6 +595,7 @@ const Settings = () => {
               </Card>
             </TabsContent>
 
+            {/* Support Tab */}
             <TabsContent value="support" className="space-y-6">
               <Card>
                 <CardHeader>
