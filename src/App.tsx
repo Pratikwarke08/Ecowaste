@@ -13,6 +13,9 @@ import Verify from "./pages/Verify";
 import Progress from "./pages/Progress";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import DustbinsList from './pages/DustbinsList';
+import PendingReviews from './pages/PendingReviews';
+import AddDustbin from './pages/AddDustbin';
 
 const queryClient = new QueryClient();
 
@@ -32,6 +35,9 @@ const App = () => (
           <Route path="/verify" element={<Verify />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/dustbins-list" element={<DustbinsList />} />
+          <Route path="/pending-reviews" element={<PendingReviews />} />
+          <Route path="/add-dustbin" element={<AddDustbin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

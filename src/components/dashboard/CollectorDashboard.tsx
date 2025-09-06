@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { useNavigate } from 'react-router-dom';
 import { 
   Camera, 
   Award, 
@@ -21,6 +22,8 @@ const CollectorDashboard = () => {
     rank: 12,
     monthlyGoal: 150,
   };
+
+  const navigate = useNavigate(); 
 
   const recentActivity = [
     { id: 1, type: 'Plastic Collection', location: 'MG Road', points: 45, status: 'approved', time: '2 hours ago' },
@@ -101,15 +104,27 @@ const CollectorDashboard = () => {
             <CardDescription>Start your waste collection journey</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button className="w-full justify-start h-12" variant="eco">
+            <Button
+              className="w-full justify-start h-12"
+              variant="eco"
+              onClick={() => navigate('/capture')}
+            >
               <Camera className="mr-3 h-5 w-5" />
               Capture Waste Collection
             </Button>
-            <Button className="w-full justify-start h-12" variant="ocean">
+            <Button
+              className="w-full justify-start h-12"
+              variant="ocean"
+              onClick={() => navigate('/dustbins')}
+            >
               <MapPin className="mr-3 h-5 w-5" />
               Find Nearby Dustbins
             </Button>
-            <Button className="w-full justify-start h-12" variant="earth">
+            <Button
+              className="w-full justify-start h-12"
+              variant="earth"
+              onClick={() => navigate('/rewards')}
+            >
               <Award className="mr-3 h-5 w-5" />
               View My Rewards
             </Button>

@@ -12,8 +12,11 @@ import {
   Activity,
   Clock
 } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 
 const EmployeeDashboard = () => {
+  const navigate = useNavigate();
+
   const stats = {
     totalDustbins: 45,
     pendingVerifications: 12,
@@ -101,7 +104,7 @@ const EmployeeDashboard = () => {
             <CardDescription>Manage system operations</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button className="w-full justify-start h-12" variant="ocean">
+            <Button className="w-full justify-start h-12" variant="ocean" onClick={() => navigate('/pending-reviews')}>
               <Shield className="mr-3 h-5 w-5" />
               Review Pending Verifications
               {stats.pendingVerifications > 0 && (
@@ -110,7 +113,7 @@ const EmployeeDashboard = () => {
                 </Badge>
               )}
             </Button>
-            <Button className="w-full justify-start h-12" variant="eco">
+            <Button className="w-full justify-start h-12" variant="eco" onClick={() => navigate('/dustbins-list')}>
               <MapPin className="mr-3 h-5 w-5" />
               Manage Dustbin Locations
             </Button>

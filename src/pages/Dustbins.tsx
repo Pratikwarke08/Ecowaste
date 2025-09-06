@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from "react-router-dom";
 import { 
   MapPin, 
   Plus, 
@@ -24,6 +25,7 @@ import {
 } from 'lucide-react';
 
 const Dustbins = () => {
+  const navigate = useNavigate();
   const userType = localStorage.getItem('userType') as 'collector' | 'employee';
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -203,8 +205,8 @@ const Dustbins = () => {
                 <p className="text-white/90">Monitor and manage dustbin locations across all sectors</p>
               </div>
               <Button 
-                onClick={() => setShowAddForm(true)}
-                variant="secondary"
+                onClick={() => navigate('/add-dustbin')}
+                variant="eco"
                 className="bg-white/20 hover:bg-white/30 text-white border-white/30"
               >
                 <Plus className="mr-2 h-4 w-4" />
