@@ -8,30 +8,30 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
 
-  
-  // ✅ Use "/EcoWaste/" only in production (for GitHub Pages), "/" for local dev
-  base: mode === "production" ? "/Ecowaste/" : "/",
-  
+  // ✅ Always root for local + Render hosting
+  // (no subfolder like "/Ecowaste/")
+  base: "/",
 
   plugins: [
     react(),
     mode === "development" && componentTagger(),
-
   ].filter(Boolean),
 
-  
-
   build: {
-    chunkSizeWarningLimit: 1000, // increases limit from 500kb → 1MB
+    chunkSizeWarningLimit: 1000, // increases warning limit
   },
 
   server: {
     https: {
-      key: fs.readFileSync("localhost-key.pem"),
-      cert: fs.readFileSync("localhost-cert.pem"),
+      key: fs.existsSync("localhost-key.pem") 
+        ? fs.readFileSync("localhost-key.pem") 
+        : undefined,
+      cert: fs.existsSync("localhost-cert.pem") 
+        ? fs.readFileSync("localhost-cert.pem") 
+        : undefined,
     },
-    host: "0.0.0.0", // Optional: allows access from LAN/mobile
-    port: 5173,      // Or your preferred port
+    host: "0.0.0.0", // allows access from LAN/mobile
+    port: 5173,
   },
 
   resolve: {
